@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">IT Словарь</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="all_words">Все слова</string>
+    <string name="my_words">Мои слова</string>
+    <string name="new_word">Добавить новое слово</string>
+    <string name="search">Поиск</string>
+    <string name="about_autor">Об Авторе</string>
+</resources>

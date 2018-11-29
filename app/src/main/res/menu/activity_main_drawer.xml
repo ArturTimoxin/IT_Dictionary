@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_allWords"
+            android:icon="@drawable/ic_menu_allwords"
+            android:title="@string/all_words" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_menu_favorite"
+            android:title="@string/my_words" />
+        <item
+            android:id="@+id/nav_newWord"
+            android:icon="@drawable/ic_menu_create"
+            android:title="@string/new_word" />
+    </group>
+
+</menu>

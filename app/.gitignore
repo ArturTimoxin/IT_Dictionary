@@ -1,0 +1,5 @@
+build/
+libs/
+app.iml
+build.grandle
+proguard-rules.pro
