@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_PATH = "";
     private static final int DB_VERSION = 1; //если приложение обновляется (например данные в нём) то и версия инкрементируется
     private static final String WORD_TABLE = "words";
+    //private static final String MY_WORDS_TABLE = "myWords";
 
     private SQLiteDatabase mDataBase;
     private final Context mContext;
@@ -35,7 +36,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
 
         this.mContext = context;
-
         // copy database from assets/words.db in local storage app
         copyDataBase();
         //Create and/or open a database.
@@ -93,10 +93,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (newVersion > oldVersion)
             mNeedUpdate = true;
     }
-
+    //get words from table words
     public Cursor getListWords() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + WORD_TABLE, null);
         return data;
     }
+
+    //get words from table myWords
+//    public Cursor getListMyWords() {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor data = db.rawQuery("SELECT * FROM " + MY_WORDS_TABLE, null);
+//        return data;
+//    }
 }

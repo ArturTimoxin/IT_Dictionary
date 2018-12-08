@@ -2,69 +2,64 @@ package com.timoxin.it_dictionary;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.timoxin.it_dictionary.data.DatabaseHelper;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    DatabaseHelper dbMain;
-    ListView mainListView;
-
+    private boolean viewIsAtHome;
+    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        db = new DatabaseHelper(this);
 
-        dbMain = new DatabaseHelper(this);
-        mainListView = (ListView) findViewById(R.id.listViewWords);
+        displayView(R.id.nav_allWords); //set start fragment
 
-        ArrayList<String> wordArray= new ArrayList<>();
-        Cursor dataWord = dbMain.getListWords();
-        if(dataWord.getCount() == 0){
-            Toast.makeText(MainActivity.this,"Нет слов в базе :(",Toast.LENGTH_LONG).show();
-        } else {
-            while(dataWord.moveToNext()){
-                wordArray.add(dataWord.getString(1)); // get data from column "word" table "words"
-                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, wordArray);
-                mainListView.setAdapter(listAdapter);
-            }
-        }
+    }
 
+    public DatabaseHelper getDataBaseHelperObject(){
+        return this.db;
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Log.d("TAG", "backPressed");
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        }
+        if (!viewIsAtHome) { //if the current view is not the News fragment
+            displayView(R.id.nav_allWords); //display the main_words fragment
         } else {
-            super.onBackPressed();
+            moveTaskToBack(true);  //If view is in News fragment, exit application
         }
     }
 
@@ -79,21 +74,36 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    public void displayView(int viewId) {
+        Fragment fragment = null;
+        switch (viewId) {
+            case R.id.nav_allWords:
+                fragment = new MainWordsFragment();
+                viewIsAtHome = false;
+                break;
+            case R.id.nav_favorite:
+                fragment = new MyWordsFragment();
+                viewIsAtHome = true;
+                break;
+            case R.id.nav_newWord:
+                fragment = new NewWordFragment();
+                viewIsAtHome = true;
+                break;
+        }
 
-        if (id == R.id.nav_allWords) {
-
-        } else if (id == R.id.nav_favorite) {
-
-        } else if (id == R.id.nav_newWord) {
-
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        displayView(item.getItemId());
         return true;
     }
 }
