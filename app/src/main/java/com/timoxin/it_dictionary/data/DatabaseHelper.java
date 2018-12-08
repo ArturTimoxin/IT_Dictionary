@@ -1,10 +1,11 @@
-package com.timoxin.it_dictionary;
+package com.timoxin.it_dictionary.data;
 /* Для открытия и подготовки БД в Android используется наследник класса SQLiteOpenHelper.
 Создаю наследник этого класса DatabaseHelper, но он будет сильно модифицированный,
 так как буду работать с готовой базой данных, а не создавать её с помощью SQL запросов.
 */
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,6 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "words.db";
     private static String DB_PATH = "";
     private static final int DB_VERSION = 1; //если приложение обновляется (например данные в нём) то и версия инкрементируется
+    private static final String WORD_TABLE = "words";
 
     private SQLiteDatabase mDataBase;
     private final Context mContext;
@@ -26,28 +28,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION); //вызов конструктора суперкласса
+
         if (android.os.Build.VERSION.SDK_INT >= 17)
             DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
         else
             DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+
         this.mContext = context;
 
+        // copy database from assets/words.db in local storage app
         copyDataBase();
-
+        //Create and/or open a database.
         this.getReadableDatabase();
     }
-
-//    public void updateDataBase() throws IOException {
-//        if (mNeedUpdate) {
-//            File dbFile = new File(DB_PATH + DB_NAME);
-//            if (dbFile.exists())
-//                dbFile.delete();
-//
-//            copyDataBase();
-//
-//            mNeedUpdate = false;
-//        }
-//    }
 
     private boolean checkDataBase() {
         File dbFile = new File(DB_PATH + DB_NAME);
@@ -68,7 +61,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void copyDBFile() throws IOException {
         InputStream mInput = mContext.getAssets().open(DB_NAME);
-        //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
         OutputStream mOutput = new FileOutputStream(DB_PATH + DB_NAME);
         byte[] mBuffer = new byte[1024];
         int mLength;
@@ -90,15 +82,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             mDataBase.close();
         super.close();
     }
-
+    // onCreate вызывается если БД не будет сущетвовать но мы хотим к ней подключиться
     @Override
     public void onCreate(SQLiteDatabase db) {
 
     }
-
+    //onUpgrade - будет вызван в случае, если мы пытаемся подключиться к БД более новой версии, чем существующая
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion)
             mNeedUpdate = true;
+    }
+
+    public Cursor getListWords() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + WORD_TABLE, null);
+        return data;
     }
 }
