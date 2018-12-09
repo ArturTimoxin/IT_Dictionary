@@ -1,5 +1,4 @@
 package com.timoxin.it_dictionary;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -19,6 +18,8 @@ import com.timoxin.it_dictionary.data.DatabaseHelper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    MenuItem itemSearch;
+    DrawerLayout drawer;
     private boolean viewIsAtHome;
     DatabaseHelper db;
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -51,27 +52,37 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Log.d("TAG", "backPressed");
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         if (!viewIsAtHome) { //if the current view is not the News fragment
-            displayView(R.id.nav_allWords); //display the main_words fragment
+            moveTaskToBack(true);  //If view is in main_words fragment, exit application
         } else {
-            moveTaskToBack(true);  //If view is in News fragment, exit application
+            displayView(R.id.nav_allWords); //display the main_words fragment
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("TAG", "onCreateOptionsMenu");
         getMenuInflater().inflate(R.menu.menu, menu);
+        this.itemSearch = menu.findItem(R.id.search);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.search:
+                Toast.makeText(getApplicationContext(),"Тут будет поиск :)", Toast.LENGTH_SHORT).show();
+                break;
+        }
         return super.onOptionsItemSelected(item);
+    }
+    public void visibleSearchItem(boolean check){
+        itemSearch.setVisible(check);
     }
 
     public void displayView(int viewId) {
@@ -97,7 +108,7 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 

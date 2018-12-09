@@ -20,21 +20,18 @@ public class MainWordsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.d("TAG", "Start onCreateView MainWordsFragment");
-
         View view = inflater.inflate(R.layout.fragment_main_words, container, false);
-
         ListView mainWordsListView = (ListView) view.findViewById(R.id.main_words_list_view);
+
         ArrayList<String> wordArray= new ArrayList<>();
         Cursor dataWord = ((MainActivity)this.getActivity()).getDataBaseHelperObject().getListWords();
         if(dataWord.getCount() == 0){
             Toast.makeText(this.getContext(),"Нет слов в базе :(",Toast.LENGTH_LONG).show();
         } else {
             while(dataWord.moveToNext()){
-                wordArray.add(dataWord.getString(1)); // get data from column "word" table "words"
+                wordArray.add(dataWord.getString(1));
                 ListAdapter listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, wordArray);
                 mainWordsListView.setAdapter(listAdapter);
-                Log.d("TAG", "addword");
             }
         }
 

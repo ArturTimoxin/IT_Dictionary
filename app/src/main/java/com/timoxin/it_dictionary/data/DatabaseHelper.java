@@ -4,6 +4,7 @@ package com.timoxin.it_dictionary.data;
 так как буду работать с готовой базой данных, а не создавать её с помощью SQL запросов.
 */
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -19,9 +20,12 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "words.db";
     private static String DB_PATH = "";
-    private static final int DB_VERSION = 1; //если приложение обновляется (например данные в нём) то и версия инкрементируется
+    private static final int DB_VERSION = 1; //если приложение обновляется а именно данные БД то и версия инкрементируется
     private static final String WORD_TABLE = "words";
-    //private static final String MY_WORDS_TABLE = "myWords";
+    private static final String WORD_COLUMN = "word";
+    private static final String MY_WORDS_TABLE = "my_words";
+    private static final String MY_WORD_COLUMN = "my_word";
+    private static final String MY_WORD_DESCRIPTION_COLUMN = "my_word_description";
 
     private SQLiteDatabase mDataBase;
     private final Context mContext;
@@ -95,15 +99,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     //get words from table words
     public Cursor getListWords() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + WORD_TABLE, null);
+        mDataBase = this.getWritableDatabase();
+        Cursor data = mDataBase.rawQuery("SELECT * FROM " + WORD_TABLE + " ORDER BY " + WORD_COLUMN, null);
         return data;
     }
 
     //get words from table myWords
-//    public Cursor getListMyWords() {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor data = db.rawQuery("SELECT * FROM " + MY_WORDS_TABLE, null);
-//        return data;
-//    }
+    public Cursor getListMyWords() {
+        mDataBase = this.getWritableDatabase();
+        Cursor data = mDataBase.rawQuery("SELECT * FROM " + MY_WORDS_TABLE + " ORDER BY " + MY_WORD_COLUMN, null);
+        return data;
+    }
+
+    public boolean addWord(String name, String description){
+        mDataBase = this.getWritableDatabase();
+        ContentValues wordContentValue = new ContentValues();
+        wordContentValue.put(MY_WORD_COLUMN, name);
+        wordContentValue.put(MY_WORD_DESCRIPTION_COLUMN, description);
+        long result = mDataBase.insert(MY_WORDS_TABLE, null, wordContentValue);
+        if(result ==- 1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }
