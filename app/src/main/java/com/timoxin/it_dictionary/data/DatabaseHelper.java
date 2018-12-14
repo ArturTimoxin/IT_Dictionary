@@ -1,4 +1,5 @@
 package com.timoxin.it_dictionary.data;
+
 /* Для открытия и подготовки БД в Android используется наследник класса SQLiteOpenHelper.
 Создаю наследник этого класса DatabaseHelper, но он будет сильно модифицированный,
 так как буду работать с готовой базой данных, а не создавать её с помощью SQL запросов.
@@ -10,7 +11,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,8 +22,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_PATH = "";
     private static final int DB_VERSION = 1; //если приложение обновляется а именно данные БД то и версия инкрементируется
     private static final String WORD_TABLE = "words";
+    private static final String WORD_COLUMN_ID = "id_word";
     private static final String WORD_COLUMN = "word";
     private static final String MY_WORDS_TABLE = "my_words";
+    private static final String MY_WORD_COLUMN_ID = "id_myword";
     private static final String MY_WORD_COLUMN = "my_word";
     private static final String MY_WORD_DESCRIPTION_COLUMN = "my_word_description";
 
@@ -100,14 +102,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //get words from table words
     public Cursor getListWords() {
         mDataBase = this.getWritableDatabase();
-        Cursor data = mDataBase.rawQuery("SELECT * FROM " + WORD_TABLE + " ORDER BY " + WORD_COLUMN, null);
+        Cursor data = mDataBase.rawQuery("SELECT " + WORD_COLUMN_ID + ", " + WORD_COLUMN
+                + " FROM " + WORD_TABLE + " ORDER BY " + WORD_COLUMN, null);
         return data;
     }
 
     //get words from table myWords
     public Cursor getListMyWords() {
         mDataBase = this.getWritableDatabase();
-        Cursor data = mDataBase.rawQuery("SELECT * FROM " + MY_WORDS_TABLE + " ORDER BY " + MY_WORD_COLUMN, null);
+        Cursor data = mDataBase.rawQuery("SELECT " + MY_WORD_COLUMN_ID + ", " + MY_WORD_COLUMN
+                + " FROM " + MY_WORDS_TABLE + " ORDER BY " + MY_WORD_COLUMN, null);
         return data;
     }
 

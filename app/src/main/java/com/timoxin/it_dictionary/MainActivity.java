@@ -9,19 +9,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.timoxin.it_dictionary.data.DatabaseHelper;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    MenuItem itemSearch;
-    DrawerLayout drawer;
+    private Fragment fragment = null;
+    private DrawerLayout drawer;
     private boolean viewIsAtHome;
-    DatabaseHelper db;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,29 +62,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("TAG", "onCreateOptionsMenu");
-        getMenuInflater().inflate(R.menu.menu, menu);
-        this.itemSearch = menu.findItem(R.id.search);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.search:
-                Toast.makeText(getApplicationContext(),"Тут будет поиск :)", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    public void visibleSearchItem(boolean check){
-        itemSearch.setVisible(check);
-    }
 
     public void displayView(int viewId) {
-        Fragment fragment = null;
         switch (viewId) {
             case R.id.nav_allWords:
                 fragment = new MainWordsFragment();

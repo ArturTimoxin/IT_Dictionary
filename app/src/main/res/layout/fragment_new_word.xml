@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_addWord"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,26 +11,24 @@
         android:id="@+id/editWordName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:layout_marginTop="10mm"
+        android:ems="10"
         android:hint="@string/input_word_name"
-        android:inputType="textPersonName"
-        />
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/editWordDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:layout_marginTop="50dp"
+        android:ems="10"
+        android:gravity="bottom|left"
         android:hint="@string/input_word_description"
         android:inputType="textMultiLine"
         android:lines="8"
-        android:minLines="1"
-        android:gravity="bottom|left"
         android:maxLines="10"
-        android:scrollbars="vertical"
-    />
+        android:minLines="1"
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/addWord"

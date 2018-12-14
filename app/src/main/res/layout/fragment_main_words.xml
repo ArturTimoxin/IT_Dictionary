@@ -2,9 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_mainWords"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".MainWordsFragment">
+
+    <EditText
+        android:id="@+id/editFilter"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="@string/search"
+        android:inputType="text"
+        android:maxLines="1" />
 
     <ListView
         android:id="@+id/main_words_list_view"

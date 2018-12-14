@@ -19,7 +19,6 @@ public class NewWordFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).visibleSearchItem(false);
         View viewAddWord = inflater.inflate(R.layout.fragment_new_word, container, false);
         editWordName = (EditText) viewAddWord.findViewById(R.id.editWordName);
         editWordDescription = (EditText) viewAddWord.findViewById(R.id.editWordDescription);
@@ -30,7 +29,7 @@ public class NewWordFragment extends Fragment {
             public void onClick(View view) {
                 tmpWordData = editWordName.getText().toString();
                 tmpDescriptionData = editWordDescription.getText().toString();
-                if (editWordName.length() !=0 || editWordDescription.length() != 0){
+                if (editWordName.length() !=0 && editWordDescription.length() != 0){
                     addData(tmpWordData,tmpDescriptionData);
                     editWordName.setText("");
                     editWordDescription.setText("");
@@ -51,11 +50,5 @@ public class NewWordFragment extends Fragment {
         }else{
             Toast.makeText(getContext(),"Что то пошло не так :(",Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ((MainActivity)getActivity()).visibleSearchItem(true);
     }
 }
