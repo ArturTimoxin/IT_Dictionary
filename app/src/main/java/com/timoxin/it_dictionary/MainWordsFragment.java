@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,6 +16,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.timoxin.it_dictionary.model.WordCard;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MainWordsFragment extends Fragment {
@@ -23,6 +27,7 @@ public class MainWordsFragment extends Fragment {
     private ArrayAdapter<String> listAdapter;
     private Cursor dataWord;
     private ArrayList<String> wordArray;
+    private static final String WORD_NAME = "GET_CARD_WORD";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,10 +56,16 @@ public class MainWordsFragment extends Fragment {
 
         mainWordsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String text = mainWordsListView.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(),"" + text + "",Toast.LENGTH_SHORT).show();
+                String nameWord = mainWordsListView.getItemAtPosition(position).toString();
+                Toast.makeText(getContext(),"" + nameWord+ "",Toast.LENGTH_SHORT).show();
+                WordCard wordCard = ((MainActivity) getActivity()).getDataBaseHelperObject().getInfoMainWord(nameWord);
+                Bundle bundle= new Bundle();
+                bundle.putSerializable(WORD_NAME, (Serializable) wordCard);
+                Fragment fragmentDescription = new WordDescriptionFragment();
+                fragmentDescription.setArguments(bundle);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragmentDescription).addToBackStack(null).commit();
             }
-
         });
 
         filter.addTextChangedListener(new TextWatcher() {

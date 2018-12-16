@@ -11,6 +11,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.timoxin.it_dictionary.model.WordCard;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -121,11 +124,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         wordContentValue.put(MY_WORD_COLUMN, name);
         wordContentValue.put(MY_WORD_DESCRIPTION_COLUMN, description);
         long result = mDataBase.insert(MY_WORDS_TABLE, null, wordContentValue);
-        if(result ==- 1){
+        if(result == -1){
             return false;
         } else {
             return true;
         }
+    }
+
+    public WordCard getInfoMainWord (String nameWord) {
+        mDataBase = this.getWritableDatabase();
+        Cursor data = mDataBase.rawQuery("SELECT * " + "FROM " + WORD_TABLE +
+                " WHERE " + WORD_COLUMN + " LIKE " + "'" + nameWord + "'", null);
+        data.moveToFirst();
+        WordCard wordCard = new WordCard(data.getInt(0), data.getString(1), data.getString(2), data.getString(3));
+        return wordCard;
+    }
+
+    public WordCard getInfoMyWord (String nameWord) {
+        mDataBase = this.getWritableDatabase();
+        Cursor data = mDataBase.rawQuery("SELECT * " + "FROM " + MY_WORDS_TABLE +
+                " WHERE " + MY_WORD_COLUMN + " LIKE " + "'" + nameWord + "'", null);
+        data.moveToFirst();
+        WordCard wordCard = new WordCard(data.getInt(0), data.getString(1), data.getString(2));
+        return wordCard;
     }
 
 }

@@ -1,4 +1,7 @@
 package com.timoxin.it_dictionary;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import com.timoxin.it_dictionary.data.DatabaseHelper;
 
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Log.d("TAG", "backPressed");
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -61,8 +62,6 @@ public class MainActivity extends AppCompatActivity
             displayView(R.id.nav_allWords); //display the main_words fragment
         }
     }
-
-
 
     public void displayView(int viewId) {
         switch (viewId) {
@@ -94,5 +93,22 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         displayView(item.getItemId());
         return true;
+    }
+
+    public boolean hasConnection(final Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        return false;
     }
 }
