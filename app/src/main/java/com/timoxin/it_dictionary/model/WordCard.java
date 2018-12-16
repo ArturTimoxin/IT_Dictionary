@@ -7,6 +7,7 @@ public class WordCard implements Serializable {
     private String name_word;
     private String desc_word;
     private String imgURL_word = null;
+    private boolean isItMyWordList = false;
 
     public WordCard(int id, String name, String desc, String imgURL){
         this.id_word = id;
@@ -15,10 +16,11 @@ public class WordCard implements Serializable {
         this.imgURL_word = imgURL;
     }
 
-    public WordCard(int id, String name, String desc){
+    public WordCard(int id, String name, String desc, boolean isItMyWordList){
         this.id_word = id;
         this.name_word = name;
         this.desc_word = desc;
+        this.isItMyWordList = isItMyWordList;
     }
 
     public int getID_word() {
@@ -37,4 +39,5 @@ public class WordCard implements Serializable {
         return imgURL_word;
     }
 
+    public boolean getIsItMyWordList() { return isItMyWordList; }
 }

@@ -102,6 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (newVersion > oldVersion)
             mNeedUpdate = true;
     }
+
     //get words from table words
     public Cursor getListWords() {
         mDataBase = this.getWritableDatabase();
@@ -110,14 +111,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    //get words from table myWords
+    // get words from table myWords
     public Cursor getListMyWords() {
         mDataBase = this.getWritableDatabase();
         Cursor data = mDataBase.rawQuery("SELECT " + MY_WORD_COLUMN_ID + ", " + MY_WORD_COLUMN
                 + " FROM " + MY_WORDS_TABLE + " ORDER BY " + MY_WORD_COLUMN, null);
         return data;
     }
-
+    // if add in NewWordFragment, without idWord
     public boolean addWord(String name, String description){
         mDataBase = this.getWritableDatabase();
         ContentValues wordContentValue = new ContentValues();
@@ -130,6 +131,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+    // if add in ActionBar WordDescriptionFragment, add with id
+    public boolean addWord(int idWord, String name, String description){
+        mDataBase = this.getWritableDatabase();
+        ContentValues wordContentValue = new ContentValues();
+        wordContentValue.put(MY_WORD_COLUMN_ID, idWord);
+        wordContentValue.put(MY_WORD_COLUMN, name);
+        wordContentValue.put(MY_WORD_DESCRIPTION_COLUMN, description);
+        long result = mDataBase.insert(MY_WORDS_TABLE, null, wordContentValue);
+        if(result == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void deleteWord (int idWord) {
+        mDataBase = this.getWritableDatabase();
+        mDataBase.delete(MY_WORDS_TABLE, MY_WORD_COLUMN_ID + " = " + idWord, null);
+    }
+
+    public boolean isExistsWordInMyWords (int idWord) {
+        mDataBase = this.getWritableDatabase();
+        Cursor data = mDataBase.rawQuery("SELECT " + MY_WORD_COLUMN_ID + " FROM " + MY_WORDS_TABLE +
+                " WHERE " + MY_WORD_COLUMN_ID +  " = " + idWord  , null);
+        Log.d("TAG", "" + data.getCount());
+        if(data.getCount() > 0) {
+            data.close();
+            return true;
+        } else {
+            data.close();
+            return false;
+        }
+    }
 
     public WordCard getInfoMainWord (String nameWord) {
         mDataBase = this.getWritableDatabase();
@@ -137,6 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + WORD_COLUMN + " LIKE " + "'" + nameWord + "'", null);
         data.moveToFirst();
         WordCard wordCard = new WordCard(data.getInt(0), data.getString(1), data.getString(2), data.getString(3));
+        data.close();
         return wordCard;
     }
 
@@ -145,8 +180,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor data = mDataBase.rawQuery("SELECT * " + "FROM " + MY_WORDS_TABLE +
                 " WHERE " + MY_WORD_COLUMN + " LIKE " + "'" + nameWord + "'", null);
         data.moveToFirst();
-        WordCard wordCard = new WordCard(data.getInt(0), data.getString(1), data.getString(2));
+        WordCard wordCard = new WordCard(data.getInt(0), data.getString(1), data.getString(2), true);
+        data.close();
         return wordCard;
     }
-
 }

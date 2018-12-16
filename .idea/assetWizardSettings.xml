@@ -19,9 +19,9 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_menu_search" />
+                            <entry key="outputName" value="ic_delete_word" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="D:\Android_Develop\icons\svg-icons\baseline-search-24px.svg" />
+                            <entry key="sourceFile" value="C:\Users\User\Desktop\svg\baseline-delete_outline-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

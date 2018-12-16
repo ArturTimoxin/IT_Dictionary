@@ -51,7 +51,7 @@ public class MyWordsFragment extends Fragment{
         filterMyWords = (EditText) viewMyWords.findViewById(R.id.editFilterMyWords);
         myWordsListView = (ListView) viewMyWords.findViewById(R.id.my_words_list_view);
 
-        if(myDataWord.getCount() == 0){
+        if(myDataWord.getCount() == 0){  // if table is empty
             myWordsListView.setVisibility(viewMyWords.GONE);
             filterMyWords.setVisibility(viewMyWords.GONE);
             textListIsEmpty.setVisibility(viewMyWords.VISIBLE);

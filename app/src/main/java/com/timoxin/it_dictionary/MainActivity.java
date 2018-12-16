@@ -10,9 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.timoxin.it_dictionary.data.DatabaseHelper;
 
@@ -25,7 +23,9 @@ public class MainActivity extends AppCompatActivity
     private android.support.v4.app.FragmentTransaction ft;
     private DrawerLayout drawer;
     private DatabaseHelper db;
-    private static long time_double_click_back_pressed;
+    private int indexOfPreviousFragment;
+    private FragmentManager.BackStackEntry backEntry;
+    private String tagOfFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         db = new DatabaseHelper(this);
-
         displayView(R.id.nav_allWords); //set start fragment
 
     }
@@ -71,12 +70,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         manager = getSupportFragmentManager();
-        int index = manager.getBackStackEntryCount() - 1;
-        //Log.d("TAG", "" + index);
-        FragmentManager.BackStackEntry backEntry = manager.getBackStackEntryAt(index);
-        String tag = backEntry.getName();
-        //Log.d("TAG", tag);
-        fragment = manager.findFragmentByTag(tag);
+        indexOfPreviousFragment = manager.getBackStackEntryCount() - 1;
+        //Log.d("TAG", "" + indexOfPreviousFragment);
+        backEntry = manager.getBackStackEntryAt(indexOfPreviousFragment);
+        tagOfFragment = backEntry.getName();
+        //Log.d("TAG", tagOfFragment);
+        fragment = manager.findFragmentByTag(tagOfFragment);
         if (fragment instanceof MainWordsFragment) {
             fragment = new MainWordsFragment();
         } else if (fragment instanceof MyWordsFragment) {
