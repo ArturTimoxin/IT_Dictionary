@@ -4,13 +4,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import com.timoxin.it_dictionary.data.DatabaseHelper;
 
@@ -18,9 +18,10 @@ import com.timoxin.it_dictionary.data.DatabaseHelper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Fragment fragment = null;
+    private android.support.v4.app.Fragment fragment = null;
+    private android.support.v4.app.FragmentManager manager;
+    private android.support.v4.app.FragmentTransaction ft;
     private DrawerLayout drawer;
-    private boolean viewIsAtHome;
     private DatabaseHelper db;
 
     @Override
@@ -52,37 +53,47 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        manager = getSupportFragmentManager();
+        int index = manager.getBackStackEntryCount() - 1;
+        Log.d("TAG", "" + index);
+        FragmentManager.BackStackEntry backEntry = manager.getBackStackEntryAt(index);
+        String tag = backEntry.getName();
+        Log.d("TAG", tag);
+        fragment = manager.findFragmentByTag(tag);
+        if(fragment instanceof MainWordsFragment) {
+            fragment = new MainWordsFragment();
+        } else if (fragment instanceof MyWordsFragment) {
+            fragment = new MyWordsFragment();
+        } else if (fragment instanceof NewWordFragment){
+            fragment = new NewWordFragment();
         }
-        if (!viewIsAtHome) { //if the current view is not the News fragment
-            moveTaskToBack(true);  //If view is in main_words fragment, exit application
-        } else {
-            displayView(R.id.nav_allWords); //display the main_words fragment
-        }
+        Log.d("TAG", fragment.toString());
+        ft = manager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment).addToBackStack(fragment.getTag()).commit();
     }
 
     public void displayView(int viewId) {
         switch (viewId) {
             case R.id.nav_allWords:
                 fragment = new MainWordsFragment();
-                viewIsAtHome = false;
                 break;
             case R.id.nav_favorite:
                 fragment = new MyWordsFragment();
-                viewIsAtHome = true;
                 break;
             case R.id.nav_newWord:
                 fragment = new NewWordFragment();
-                viewIsAtHome = true;
                 break;
         }
 
         if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
+            ft = getSupportFragmentManager().beginTransaction();
+            if(fragment instanceof MainWordsFragment) {
+                ft.replace(R.id.content_frame, fragment, "mainWordsFragment").addToBackStack("mainWordsFragment").commit();
+            } else if (fragment instanceof MyWordsFragment) {
+                ft.replace(R.id.content_frame, fragment, "myWordsFragment").addToBackStack("mainWordsFragment").commit();
+            } else if (fragment instanceof NewWordFragment){
+                ft.replace(R.id.content_frame, fragment, "newFragment").addToBackStack("mainWordsFragment").commit();
+            }
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -67,14 +67,13 @@ public class MyWordsFragment extends Fragment{
         myWordsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String nameWord = myWordsListView.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(),"" + nameWord+ "",Toast.LENGTH_SHORT).show();
                 WordCard wordCard = ((MainActivity) getActivity()).getDataBaseHelperObject().getInfoMyWord(nameWord);
                 Bundle bundle= new Bundle();
                 bundle.putSerializable(WORD_NAME, (Serializable) wordCard);
                 Fragment fragmentDescription = new WordDescriptionFragment();
                 fragmentDescription.setArguments(bundle);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragmentDescription).addToBackStack(null).commit();
+                ft.replace(R.id.content_frame, fragmentDescription, "wordDescriptionFragment").addToBackStack("myWordsFragment").commit();
             }
         });
 
