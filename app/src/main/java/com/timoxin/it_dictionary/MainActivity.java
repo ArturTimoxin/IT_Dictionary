@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.timoxin.it_dictionary.data.DatabaseHelper;
 
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity
     private android.support.v4.app.FragmentTransaction ft;
     private DrawerLayout drawer;
     private DatabaseHelper db;
+    private static long time_double_click_back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,49 +54,56 @@ public class MainActivity extends AppCompatActivity
         return this.db;
     }
 
+/*
+ * Отслеживание собития нажатия кнопки назад организовано
+ * по принципу получания из стека фрагментов предидущего фрагмента по индексу.
+ * Т.к. метод replace удаляет фрагмент, то мы должны создать его заново и отобразить.
+ * В дальнейшем при добавлении нового фрагмента ему также необходимо присваивать теги
+ * для успешного отображения предидущего тега.
+ * Например:
+ * ft.replace(R.id.content_frame, Объект_фрагмента_который_ЗАМЕНЯЕТ
+ *             "тег_объекта_который_заменяется").addToBackStack("тег_объекта_которого_ЗАМЕНЯЮТ").commit();
+ * Так же для отображения тега его необх  заново создать, дописав в методе onBackPressed
+ * проверку принадлежности к классу и соответвенно создание заново этого объекта
+ * Т.О. при нажатии кнопки back будет произведена замена на предидущий тег.
+ */
+
     @Override
     public void onBackPressed() {
         manager = getSupportFragmentManager();
         int index = manager.getBackStackEntryCount() - 1;
-        Log.d("TAG", "" + index);
+        //Log.d("TAG", "" + index);
         FragmentManager.BackStackEntry backEntry = manager.getBackStackEntryAt(index);
         String tag = backEntry.getName();
-        Log.d("TAG", tag);
+        //Log.d("TAG", tag);
         fragment = manager.findFragmentByTag(tag);
-        if(fragment instanceof MainWordsFragment) {
+        if (fragment instanceof MainWordsFragment) {
             fragment = new MainWordsFragment();
         } else if (fragment instanceof MyWordsFragment) {
             fragment = new MyWordsFragment();
-        } else if (fragment instanceof NewWordFragment){
+        } else if (fragment instanceof NewWordFragment) {
             fragment = new NewWordFragment();
         }
-        Log.d("TAG", fragment.toString());
+        //Log.d("TAG", fragment.toString());
         ft = manager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment).addToBackStack(fragment.getTag()).commit();
+        ft.replace(R.id.content_frame, fragment).commit();
     }
 
     public void displayView(int viewId) {
+        ft = getSupportFragmentManager().beginTransaction();
         switch (viewId) {
             case R.id.nav_allWords:
                 fragment = new MainWordsFragment();
+                ft.replace(R.id.content_frame, fragment, "mainWordsFragment").addToBackStack("mainWordsFragment").commit();
                 break;
             case R.id.nav_favorite:
                 fragment = new MyWordsFragment();
+                ft.replace(R.id.content_frame, fragment, "myWordsFragment").addToBackStack("mainWordsFragment").commit();
                 break;
             case R.id.nav_newWord:
                 fragment = new NewWordFragment();
-                break;
-        }
-
-        if (fragment != null) {
-            ft = getSupportFragmentManager().beginTransaction();
-            if(fragment instanceof MainWordsFragment) {
-                ft.replace(R.id.content_frame, fragment, "mainWordsFragment").addToBackStack("mainWordsFragment").commit();
-            } else if (fragment instanceof MyWordsFragment) {
-                ft.replace(R.id.content_frame, fragment, "myWordsFragment").addToBackStack("mainWordsFragment").commit();
-            } else if (fragment instanceof NewWordFragment){
                 ft.replace(R.id.content_frame, fragment, "newFragment").addToBackStack("mainWordsFragment").commit();
-            }
+                break;
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
