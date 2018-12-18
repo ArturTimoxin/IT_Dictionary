@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_newWord:
                 fragment = new NewWordFragment();
-                ft.replace(R.id.content_frame, fragment, "newFragment").addToBackStack("mainWordsFragment").commit();
+                ft.replace(R.id.content_frame, fragment, "newWordFragment").addToBackStack("mainWordsFragment").commit();
                 break;
         }
 

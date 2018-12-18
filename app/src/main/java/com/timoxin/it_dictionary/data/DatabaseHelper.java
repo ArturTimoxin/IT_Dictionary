@@ -23,7 +23,7 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "words.db";
     private static String DB_PATH = "";
-    private static final int DB_VERSION = 1; //если приложение обновляется а именно данные БД то и версия инкрементируется
+    private static int DB_VERSION = 1; //если приложение обновляется а именно данные БД то и версия инкрементируется
     private static final String WORD_TABLE = "words";
     private static final String WORD_COLUMN_ID = "id_word";
     private static final String WORD_COLUMN = "word";

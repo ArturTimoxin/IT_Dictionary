@@ -3,6 +3,7 @@ package com.timoxin.it_dictionary;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -29,9 +31,13 @@ public class MyWordsFragment extends Fragment{
     private ArrayList<String> myWordArray;
     private ArrayAdapter myListAdapter;
     private Cursor myDataWord;
-    TextView textListIsEmpty;
-    EditText filterMyWords;
-    ListView myWordsListView;
+    private TextView textListIsEmpty;
+    private EditText filterMyWords;
+    private ListView myWordsListView;
+    private FloatingActionButton fab;
+    private boolean flagFab = false;
+    private Fragment fragment;
+    private FragmentTransaction ft;
     private static final String WORD_NAME = "GET_CARD_WORD";
 
     @Override
@@ -50,6 +56,7 @@ public class MyWordsFragment extends Fragment{
         textListIsEmpty = (TextView) viewMyWords.findViewById(R.id.textListIsEmpty);
         filterMyWords = (EditText) viewMyWords.findViewById(R.id.editFilterMyWords);
         myWordsListView = (ListView) viewMyWords.findViewById(R.id.my_words_list_view);
+        fab = (FloatingActionButton) viewMyWords.findViewById(R.id.fab_listview_mywords);
 
         if(myDataWord.getCount() == 0){  // if table is empty
             myWordsListView.setVisibility(viewMyWords.GONE);
@@ -70,10 +77,10 @@ public class MyWordsFragment extends Fragment{
                 WordCard wordCard = ((MainActivity) getActivity()).getDataBaseHelperObject().getInfoMyWord(nameWord);
                 Bundle bundle= new Bundle();
                 bundle.putSerializable(WORD_NAME, (Serializable) wordCard);
-                Fragment fragmentDescription = new WordDescriptionFragment();
-                fragmentDescription.setArguments(bundle);
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragmentDescription, "wordDescriptionFragment").addToBackStack("myWordsFragment").commit();
+                fragment = new WordDescriptionFragment();
+                fragment.setArguments(bundle);
+                ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment, "wordDescriptionFragment").addToBackStack("myWordsFragment").commit();
             }
         });
 
@@ -87,6 +94,33 @@ public class MyWordsFragment extends Fragment{
             }
             @Override
             public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new NewWordFragment();
+                ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment, "newWordFragment").addToBackStack("myWordsFragment").commit();
+            }
+        });
+
+        myWordsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem > 0 && firstVisibleItem < 3){
+                    fab.show();
+                } else if (firstVisibleItem > 3) {
+                    fab.hide();
+                }
+
             }
         });
 
