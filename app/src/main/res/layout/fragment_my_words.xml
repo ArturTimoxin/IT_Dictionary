@@ -5,7 +5,7 @@
     android:id="@+id/layout_myWords"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyWordsFragment">
+    tools:context=".view.MyWordsFragment">
 
     <TextView
         android:id="@+id/textListIsEmpty"

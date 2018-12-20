@@ -1,4 +1,4 @@
-package com.timoxin.it_dictionary;
+package com.timoxin.it_dictionary.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.timoxin.it_dictionary.MainActivity;
+import com.timoxin.it_dictionary.R;
 import com.timoxin.it_dictionary.model.WordCard;
 
 public class WordDescriptionFragment extends Fragment {

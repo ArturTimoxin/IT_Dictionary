@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.timoxin.it_dictionary.data.DatabaseHelper;
+import com.timoxin.it_dictionary.view.MainWordsFragment;
+import com.timoxin.it_dictionary.view.MyWordsFragment;
+import com.timoxin.it_dictionary.view.NewWordFragment;
 
 
 public class MainActivity extends AppCompatActivity

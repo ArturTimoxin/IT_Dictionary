@@ -1,4 +1,4 @@
-package com.timoxin.it_dictionary;
+package com.timoxin.it_dictionary.view;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.timoxin.it_dictionary.MainActivity;
+import com.timoxin.it_dictionary.R;
 import com.timoxin.it_dictionary.model.WordCard;
 
 import java.io.Serializable;
@@ -35,7 +35,8 @@ public class MyWordsFragment extends Fragment{
     private EditText filterMyWords;
     private ListView myWordsListView;
     private FloatingActionButton fab;
-    private boolean flagFab = false;
+    private String nameClickWord;
+    private WordCard wordCard;
     private Fragment fragment;
     private FragmentTransaction ft;
     private static final String WORD_NAME = "GET_CARD_WORD";
@@ -73,8 +74,8 @@ public class MyWordsFragment extends Fragment{
 
         myWordsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String nameWord = myWordsListView.getItemAtPosition(position).toString();
-                WordCard wordCard = ((MainActivity) getActivity()).getDataBaseHelperObject().getInfoMyWord(nameWord);
+                nameClickWord = myWordsListView.getItemAtPosition(position).toString();
+                wordCard = ((MainActivity) getActivity()).getDataBaseHelperObject().getInfoMyWord(nameClickWord);
                 Bundle bundle= new Bundle();
                 bundle.putSerializable(WORD_NAME, (Serializable) wordCard);
                 fragment = new WordDescriptionFragment();

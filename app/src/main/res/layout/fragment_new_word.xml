@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NewWordFragment">
+    tools:context=".view.NewWordFragment">
 
     <EditText
         android:id="@+id/editWordName"

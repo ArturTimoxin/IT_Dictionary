@@ -1,4 +1,4 @@
-package com.timoxin.it_dictionary;
+package com.timoxin.it_dictionary.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.timoxin.it_dictionary.MainActivity;
+import com.timoxin.it_dictionary.R;
+
 public class NewWordFragment extends Fragment {
 
     EditText editWordName, editWordDescription;
     Button btnAddWord;
     String tmpWordData, tmpDescriptionData;
     boolean insertData;
+    boolean isExistsWord;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,9 +34,14 @@ public class NewWordFragment extends Fragment {
                 tmpWordData = editWordName.getText().toString();
                 tmpDescriptionData = editWordDescription.getText().toString();
                 if (editWordName.length() !=0 && editWordDescription.length() != 0){
-                    addData(tmpWordData,tmpDescriptionData);
-                    editWordName.setText("");
-                    editWordDescription.setText("");
+                    isExistsWord = ((MainActivity) getActivity()).getDataBaseHelperObject().isExistWordInMyWordsSearchByName(tmpWordData);
+                    if(isExistsWord) {
+                        Toast.makeText(getContext(),"Такое слово уже есть в вашем списке!",Toast.LENGTH_SHORT).show();
+                    } else {
+                        addData(tmpWordData, tmpDescriptionData);
+                        editWordName.setText("");
+                        editWordDescription.setText("");
+                    }
                 }else{
                     Toast.makeText(getContext(),"Введите слово и его описание!",Toast.LENGTH_SHORT).show();
                 }

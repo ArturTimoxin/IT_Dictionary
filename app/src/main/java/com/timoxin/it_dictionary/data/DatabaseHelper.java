@@ -155,8 +155,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mDataBase = this.getWritableDatabase();
         Cursor data = mDataBase.rawQuery("SELECT " + MY_WORD_COLUMN_ID + " FROM " + MY_WORDS_TABLE +
                 " WHERE " + MY_WORD_COLUMN_ID +  " = " + idWord  , null);
-        Log.d("TAG", "" + data.getCount());
+        //Log.d("TAG", "" + data.getCount());
         if(data.getCount() > 0) {
+            data.close();
+            return true;
+        } else {
+            data.close();
+            return false;
+        }
+    }
+
+    public boolean isExistWordInMyWordsSearchByName (String nameWord) {
+        mDataBase = this.getWritableDatabase();
+        Cursor data = mDataBase.rawQuery("SELECT " + MY_WORD_COLUMN + " FROM " + MY_WORDS_TABLE
+                + " WHERE " + MY_WORD_COLUMN + " LIKE " + "'" + nameWord + "'", null);
+        Log.d("TAG", "" + data.getCount());
+        if(data.getCount() > 0){
             data.close();
             return true;
         } else {

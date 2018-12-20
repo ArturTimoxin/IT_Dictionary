@@ -1,4 +1,4 @@
-package com.timoxin.it_dictionary;
+package com.timoxin.it_dictionary.view;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.timoxin.it_dictionary.MainActivity;
+import com.timoxin.it_dictionary.R;
 import com.timoxin.it_dictionary.model.WordCard;
 
 import java.io.Serializable;
